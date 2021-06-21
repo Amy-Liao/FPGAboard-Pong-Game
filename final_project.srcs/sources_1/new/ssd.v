@@ -12,14 +12,43 @@
 `define SSD_NINE `SSD_BIT_WIDTH'b0001100_1 // 9
 `define SSD_DEF `SSD_BIT_WIDTH'b0000000_0 // default
 
-module ssd (display3, display2, display1, display0, ball_position);
+module ssd (display3, display2, display1, display0, ball_position, score_tens, score_ones);
     output reg [0:7] display3, display2, display1, display0;
+    input [3:0] score_tens, score_ones;
     input [3:0] ball_position;
 
     always @(*) begin
-        display3 = `SSD_ZERO;
-        display2 = `SSD_ZERO; 
+        case (score_tens)
+            4'd0: display3 = `SSD_ZERO;
+            4'd1: display3 = `SSD_ONE;
+            4'd2: display3 = `SSD_TWO;
+            4'd3: display3 = `SSD_THREE;
+            4'd4: display3 = `SSD_FOUR;
+            4'd5: display3 = `SSD_FIVE;
+            4'd6: display3 = `SSD_SIX;
+            4'd7: display3 = `SSD_SEVEN;
+            4'd8: display3 = `SSD_EIGHT;
+            4'd9: display3 = `SSD_NINE;
+            default: display3 = `SSD_DEF;
+        endcase
     end
+
+    always @(*) begin
+        case (score_ones)
+            4'd0: display2 = `SSD_ZERO;
+            4'd1: display2 = `SSD_ONE;
+            4'd2: display2 = `SSD_TWO;
+            4'd3: display2 = `SSD_THREE;
+            4'd4: display2 = `SSD_FOUR;
+            4'd5: display2 = `SSD_FIVE;
+            4'd6: display2 = `SSD_SIX;
+            4'd7: display2 = `SSD_SEVEN;
+            4'd8: display2 = `SSD_EIGHT;
+            4'd9: display2 = `SSD_NINE;
+            default: display2 = `SSD_DEF;
+        endcase
+    end
+
     always @(*) begin
         case (ball_position)
             4'd15: begin

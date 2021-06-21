@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
-module game (LED, ball_position, next, level, en, slower_clk, PS2_DATA, PS2_CLK, clk, rst);
+module game (LED, score_tens, score_ones, ball_position, level, en,  PS2_DATA, PS2_CLK, slower_clk, clk1Hz, clk, rst);
     output reg [15:0] LED;
     output [3:0] ball_position;
-    output next;
+    output [3:0] score_tens, score_ones;
     input [1:0] level;
     inout wire PS2_DATA;
     inout wire PS2_CLK;
-    input en, slower_clk, clk, rst;
+    input en, slower_clk, clk1Hz, clk, rst;
 
 //keyboard
     reg left, right;
@@ -42,10 +42,18 @@ module game (LED, ball_position, next, level, en, slower_clk, PS2_DATA, PS2_CLK,
     paddle PD0 (.paddle_posL(paddle_posL), .level(level), .left(left_wire), .right(right_wire), .clk(slower_clk), .rst(rst));
 
 //random number generator
-    wire out_new;
-    assign out_new = 1;
-    random_num RN0 (.ball_position(ball_position), .out_new(out_new), .clk(slower_clk), .rst(rst));
+    // wire out_new;
+    // assign out_new = 1;
+    wire next;
+    random_num RN0 (.ball_position(ball_position), .out_new(next), .clk(slower_clk), .rst(rst));
     
+//determine if we get one point
+    get_point GP0 (.next(next), .paddle_posL(paddle_posL), .ball_position(ball_position), .level(level), .clk(slower_clk), .rst(rst));
+
+//record score
+    // wire [6:0] score;
+    score S0 (.score_tens(score_tens), .score_ones(score_ones), .point(next), .clk(slower_clk), .rst(rst));
+
 //LED  
     always@ (*) begin
         case (level)
