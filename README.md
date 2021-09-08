@@ -1,4 +1,3 @@
-# FPGAboard-Pong-Game
 ## Game Rule
 This project is an implementation of pong game on FPGA board. You need to hit the ball and get scores as much as possible.  
 #### Game Objects
@@ -24,5 +23,44 @@ incremented by 1. The game will be over after 20 seconds, and the music which re
 - Keyboard
 - Audio device
 
+## Block Diagram
+#### The Whole Game
+![image](https://user-images.githubusercontent.com/72532191/132470015-cb6b3afd-55ec-4203-8b5c-3bf87a173350.png)
+#### Inside "game" Module
+![image](https://user-images.githubusercontent.com/72532191/132470432-52721a77-c71b-4cb0-bfaa-3d853cef525b.png)
+#### Inside "speaker" Module
+![image](https://user-images.githubusercontent.com/72532191/132470736-7250b5cb-afa2-46d5-aa7a-2743eee9129d.png)
 
-
+## Module Details
+#### Frequency divider module:
+Provide divided clock for other modules.
+#### Level module: 
+Assign level based on switches inputs.
+#### Timer module:
+Count game time. When the time is up, its output, “en”, will be 0 and be sent to 
+“game” module. All LEDs will be lighted up and no new ball position will be 
+generated.
+#### Speaker module:
+It contains two submodules which are “note_gen” and “speaker_control”. 
+Together, they produce sound. In the speaker module, there is also a counter 
+counting to 5 when the “timer” module sends “timeout” signal. For each
+number in counter, it has one corresponding tone and submodules will generate 
+those tones.
+#### Game module:
+This is where the game control be done. We can first detect left or right order for 
+users via “keyboard” module. “Paddle” module gets the signal and outputs the 
+leftmost paddle position. 
+“Random_num” module can generate random ball position from zero to fifteen
+which represents the rightmost to leftmost LED position. The output of this 
+module is 4-bit ball position (LED position).
+Given the current paddle leftmost position and assigned ball position, “get_point”
+module will determine if our paddle cover the ball position. If it is, its output,
+“next”, will be 1 and indicates the next ball position should be generated. That’s 
+why this signal is also connected to “random_num” module. “Random_num”
+module only generates new ball position when user gets point. “Next” signal is 
+also sent to “score” module to record user’s score.
+“Score” module record the tens digit and ones digit of user’s score and send it to 
+“ssd” module.
+#### ssd and ssd_control module:
+Given “score_tens”, “score_ones”, and “ball_position” signals, “ssd” and 
+“ssd_control” will display score and ball position on the 7-segment display.
