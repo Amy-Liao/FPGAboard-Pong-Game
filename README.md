@@ -1,3 +1,4 @@
+# FPGAboard-Pong-Game
 ## Game Rule
 This project is an implementation of pong game on FPGA board. You need to hit the ball and get scores as much as possible.  
 #### Game Objects
@@ -61,6 +62,6 @@ module only generates new ball position when user gets point. “Next” signal 
 also sent to “score” module to record user’s score.
 “Score” module record the tens digit and ones digit of user’s score and send it to 
 “ssd” module.
-#### ssd and ssd_control module:
+#### Ssd and ssd_control module:
 Given “score_tens”, “score_ones”, and “ball_position” signals, “ssd” and 
 “ssd_control” will display score and ball position on the 7-segment display.
