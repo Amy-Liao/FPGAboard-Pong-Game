@@ -1,6 +1,6 @@
-# FPGA board-Pong-Game
+# FPGAboard-Pong-Game
 ## Game Rule
-This project is an implementation of pong game on FPGA board. You need to hit the ball and get scores as much as possible.  
+This project is an implementation of pong game on FPGA board. You need to light up ball LEDs and get scores as much as possible.  
 #### Game Objects
 - Paddle (consecutive LEDs)
 - Designated ball position (right 2 digits of 7-segment display)
@@ -17,6 +17,7 @@ After selecting game level, you can start the game by pressing "up" button on FP
 will show the designated ball position which indicates which LED you should light up by your paddle. For example, if the designated ball position is 15, you need to move your paddle by pressing "A" (left) or "D" (right) to light up the leftmost LED. Once you successfully light the right LED, your score (displayed on the left 2 digits of 7-segment) will be incremented by 1. The game will be over after 20 seconds, and the music which represents the end of game will be played as well. You can restart the game by pressing "up" button.
 
 ## Demo
+[![demo thumbnail](https://user-images.githubusercontent.com/72532191/132491778-83311791-2cf2-42f6-90b2-04cbc9961362.jpg)](https://youtu.be/K643lTh2OxE)
 
 ## Required Tools
 - FPGA board (Basys 3 Xilinx Artix-7)
