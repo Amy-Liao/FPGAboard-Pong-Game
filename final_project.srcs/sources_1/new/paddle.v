@@ -1,13 +1,13 @@
 `timescale 1ns / 1ps
-module paddle (paddle_posL, level, left, right, clk, rst);
+module paddle (paddle_posL, level, left, right, clk, rst, en);
     output reg [3:0] paddle_posL;
     input [1:0] level;
     input left, right;
-    input rst, clk;
+    input rst, clk, en;
 
     reg [3:0] next_paddle_posL;
     always @(*) begin
-        if (rst) begin
+        if (rst || ~en) begin
             next_paddle_posL = 4'd9;
         end
         else if ((paddle_posL == 4'd15) && ((level == 2'b10)||(level == 2'b01)) && (left == 1'b1)) begin
@@ -31,7 +31,7 @@ module paddle (paddle_posL, level, left, right, clk, rst);
     end
     
     always @(posedge clk or posedge rst) begin
-        if (rst) begin
+        if (rst || ~en) begin
             paddle_posL <= 4'd9;
         end
         else begin

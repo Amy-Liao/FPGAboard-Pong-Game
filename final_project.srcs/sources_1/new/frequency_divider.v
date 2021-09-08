@@ -16,7 +16,6 @@ module frequency_divider(clk25M, clk1Hz, ssd_control_en, slower_clk, clk, rst);
     always @(posedge clk) begin
       num <= next_num;
     end
-
     always@(posedge clk)
     begin
         if (rst) begin
@@ -28,8 +27,6 @@ module frequency_divider(clk25M, clk1Hz, ssd_control_en, slower_clk, clk, rst);
         else begin
             count = count+1; end
     end
-
     assign next_num = num + 1'b1;
     assign clk25M = num[1];
-
 endmodule

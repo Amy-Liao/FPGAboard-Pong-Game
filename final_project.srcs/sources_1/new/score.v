@@ -27,9 +27,7 @@ module score(score_tens, score_ones, point, clk, rst);
         end
     end
     wire out_pulse_next;
-    
     assign out_pulse_next = point & (~debounced_delay);
-    
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             one_pulse_point <= 1'b0;
@@ -39,7 +37,7 @@ module score(score_tens, score_ones, point, clk, rst);
         end
     end
 
-
+    //score value assignment
     always @(*) begin
         if ((score_ones == 4'd9) && (score_tens == 4'd9)&& (one_pulse_point == 1'b1)) begin
             score_ones_next = 4'd9;

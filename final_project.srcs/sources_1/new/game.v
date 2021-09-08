@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
-module game (LED, score_tens, score_ones, ball_position, level, en,  PS2_DATA, PS2_CLK, slower_clk, clk1Hz, clk, rst);
+module game (LED, score_tens, score_ones, ball_position, level, en,  PS2_DATA, PS2_CLK, slower_clk, clk, rst);
     output reg [15:0] LED;
     output [3:0] ball_position;
     output [3:0] score_tens, score_ones;
     input [1:0] level;
     inout wire PS2_DATA;
     inout wire PS2_CLK;
-    input en, slower_clk, clk1Hz, clk, rst;
+    input en, slower_clk, clk, rst;
 
 //keyboard
     reg left, right;
@@ -39,24 +39,22 @@ module game (LED, score_tens, score_ones, ball_position, level, en,  PS2_DATA, P
 
 //paddle
     wire [3:0] paddle_posL;
-    paddle PD0 (.paddle_posL(paddle_posL), .level(level), .left(left_wire), .right(right_wire), .clk(slower_clk), .rst(rst));
+    paddle PD0 (.paddle_posL(paddle_posL), .level(level), .left(left_wire), .right(right_wire), .clk(slower_clk), .rst(rst), .en(en));
 
 //random number generator
-    // wire out_new;
-    // assign out_new = 1;
     wire next;
-    random_num RN0 (.ball_position(ball_position), .out_new(next), .clk(slower_clk), .rst(rst));
+    random_num RN0 (.ball_position(ball_position), .out_new(next), .paddle_posL(paddle_posL), .level(level), .clk(slower_clk), .rst(rst));
     
 //determine if we get one point
-    get_point GP0 (.next(next), .paddle_posL(paddle_posL), .ball_position(ball_position), .level(level), .clk(slower_clk), .rst(rst));
+    get_point GP0 (.next(next), .paddle_posL(paddle_posL), .ball_position(ball_position), .level(level), .clk(slower_clk), .rst(rst), .en(en));
 
 //record score
-    // wire [6:0] score;
     score S0 (.score_tens(score_tens), .score_ones(score_ones), .point(next), .clk(slower_clk), .rst(rst));
 
 //LED  
     always@ (*) begin
-        case (level)
+        if (en) begin
+            case (level)
             2'b01: begin
                 case (paddle_posL)
                     4'd15: LED = {{5{1'b1}}, {11{1'b0}}}; 
@@ -76,7 +74,7 @@ module game (LED, score_tens, score_ones, ball_position, level, en,  PS2_DATA, P
             end
             2'b10: begin
                 case (paddle_posL)
-                    4'd15: LED = {{3{1'b1}}, {11{1'b0}}}; 
+                    4'd15: LED = {{3{1'b1}}, {13{1'b0}}}; 
                     4'd14: LED = {{1{1'b0}}, {3{1'b1}}, {12{1'b0}}}; 
                     4'd13: LED = {{2{1'b0}}, {3{1'b1}}, {11{1'b0}}}; 
                     4'd12: LED = {{3{1'b0}}, {3{1'b1}}, {10{1'b0}}}; 
@@ -94,10 +92,10 @@ module game (LED, score_tens, score_ones, ball_position, level, en,  PS2_DATA, P
                 endcase
             end
             default: LED = {16{1'b1}}; 
-        endcase  
+            endcase  
+        end
+        else begin
+            LED = {16{1'b1}}; 
+        end 
     end
-    
-//    assign ball_position = 4'd3;
-//    assign next = 1;
-    
 endmodule
